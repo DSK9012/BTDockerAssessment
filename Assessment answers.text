@@ -1,0 +1,76 @@
+DOCKERS 
+Part A
+    1. With minimal possible layers to install WebServices and expose appropriate http port for accessing
+
+        1. Created a sample NodeJS app
+        2. Exposed at port 8080
+        3. To build image --> 
+        “docker build –f Dockerfile –t nodeapp .”
+        When we run the image , we map the port with 8080 in our local machine.
+        “docker run –d –p 80:8080 –name nodeapp  nodeapp:latest”
+        Github Repo: https://github.com/DSK9012/BTDockerAssessment.git
+
+
+    2. You are trying to start a Docker container and it is failing to start – what according to you are possible causes
+        docker container ls -> To check container presence
+        docker exec -it <containerName> ls
+        echo $? #return status 0- successful nonzero - failure
+        docker logs -f <containerName> | grep -nRi error
+        debug will happen based upon the above command output
+
+PART B
+    1. Using shell command search for a particular pattern (of your choice) to search Docker logs using awk command
+        docker logs -f <containerName> |grep -nRi error | awk '{print $1,$2}'
+    2. Execute a shell command inside the container to search for a specific file present in the container
+        docker exec -it <dockerContainerName> ls <filename>
+        sample output: rwx--- file   May 12  <filename>
+
+JENKINS
+PART A
+    1. There is a Jenkins pipeline failure the failure error at the outset suggest that build has failed and one of the tool used for the build is running inside the container – what are the commands you will use for debugging the issue
+        Will check Jenkins log file
+        Will check for these keywords --> error, suspended, failed, interrupted
+        +/- 5 lines from the above words... Will search for which command has failed
+        and in which container it is failed
+        try to login into the container
+        try to execute the same step manually
+
+    2. There is a build failure due to connectivity issue with one of the tools – what actions you will take to narrow down the issue
+        Will check Jenkins log file
+        Will check for these keywords --> error, suspended, failed, interrupted
+        +/- 5 lines from the above words... Will search for which command has failed
+        ssh failure
+        if config is failing
+        ip -> hostname -i | ip addr
+        ping
+        netstat
+        traceroute
+        Will check manually as well as from network logs
+
+
+    3. As part of part of Jenkins pipeline build process assume that application is containerized and image needs to be pushed to repository, However there is a failure to indicate that image push has failed. What are the possible reasons for the failure
+
+        1. Docker Registry URL may be incorrect
+        2. Access denied to docker hub
+        3. Wrong tags being provided
+
+    4. Write a shell script to setup git repo, docker build, push image to docker repository.
+        #shebang statement
+        #!/bin/sh
+        #create a directory
+        mkdir -p saikiran
+        cd saikiran
+        git clone https://github.com/DSK9012/BTDockerAssessment #optional step
+        cp Dockerfile ./docker/Dockerfile
+        #Docker image
+        docker build -f ./docker/Dockerfile -t testimage:1.0
+        #Docker image push to hub/repository
+        docker push testimage:1.0
+               
+
+
+
+               
+
+               
+
